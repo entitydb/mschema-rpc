@@ -12,35 +12,36 @@ test("load mschema module", function (t) {
 test("rpc.invoke - valid data - with mschema", function (t) {
 
   var fireSchema = {
+    "type": "async",
     "description": "fires missle",
     "input": {
       "name": "string",
-        "power": {
-          "type": "string",
-          "enum": ["high", "medium", "low"]
-        },
-        "warheads": {
-          "type": "number",
-          "min": 1,
-          "max": 8
-        }
+      "power": {
+        "type": "string",
+        "enum": ["high", "medium", "low"],
       },
+      "warheads": {
+        "type": "number",
+        "min": 1,
+        "max": 8,
+      },
+    },
     "output": {
       "result": "string"
     }
   };
 
-  function fireFn (input, callback) {
+  function fireFn (name, power, warheads, callback) {
     callback(null, 'weapon fired')
   }
 
-  var data = {
-    "name": "small missle",
-    "power": "low",
-    "warheads": 5
-  };
+  var args = [
+    "small missle",
+    "low",
+    8,
+  ];
 
-  rpc.invoke(data, fireFn, fireSchema, function(errors, result) {
+  rpc.invoke(args, fireFn, fireSchema, function(errors, result) {
     
     console.log(errors);
     
@@ -53,35 +54,36 @@ test("rpc.invoke - valid data - with mschema", function (t) {
 test("rpc.invoke - invalid data - with mschema", function (t) {
 
   var fireSchema = {
+    "type": "async",
     "description": "fires missle",
     "input": {
       "name": "string",
-        "power": {
-          "type": "string",
-          "enum": ["high", "medium", "low"]
-        },
-        "warheads": {
-          "type": "number",
-          "min": 1,
-          "max": 8
-        }
+      "power": {
+        "type": "string",
+        "enum": ["high", "medium", "low"],
       },
+      "warheads": {
+        "type": "number",
+        "min": 1,
+        "max": 8,
+      },
+    },
     "output": {
-      "result": "string"
-    }
+      "result": "string",
+    },
   };
 
-  function fireFn (input, callback) {
+  function fireFn (name, power, warheads, callback) {
     callback(null, 'weapon fired')
   }
 
-  var data = {
-    "name": "small missle",
-    "power": "unknown",
-    "warheads": 10
-  };
+  var args = [
+    "small missle",
+    "unknown",
+    10, 
+  ];
 
-  rpc.invoke(data, fireFn, fireSchema, function(err, result) {
+  rpc.invoke(args, fireFn, fireSchema, function(err, result) {
     t.type(result, Array);
     t.equal(result.length, 2);
     t.equal(result[0].property, "power");
@@ -92,40 +94,38 @@ test("rpc.invoke - invalid data - with mschema", function (t) {
     t.ok(true, 'weapon not fired')
     t.end();
   });
-
 });
 
 test("rpc.invoke - invalid data - with mschema", function (t) {
 
   var fireSchema = {
+    "type": "async",
     "description": "fires missle",
     "input": {
       "name": {
         "type": "string",
-        "required": true
+        "required": true,
       },
       "password": {
         "type": "string",
-        "required": true
-      }
-      
-    }
+        "required": true,
+      },
+    },
   };
 
-  function fireFn (input, callback) {
+  function fireFn (name, password, callback) {
     callback(null, 'weapon fired')
   }
 
-  var data = {
-    "name": "hi",
-    "password": ""
-  };
+  var args = [
+    "hi",
+    "",
+  ];
 
-  rpc.invoke(data, fireFn, fireSchema, function(err, result) {
+  rpc.invoke(args, fireFn, fireSchema, function(err, result) {
     console.log(err, result)
     t.type(err, "object");
     t.ok(true, 'weapon not fired')
     t.end();
   });
-
 });

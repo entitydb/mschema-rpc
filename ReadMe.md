@@ -9,10 +9,10 @@ Minimalistic [Remote Procedural Call](http://en.wikipedia.org/wiki/Remote_proced
 
 # API
 
-### rpc.invoke(inputData, method, methodSchema, callback)
+### rpc.invoke(args, method, methodSchema, callback)
 
-### inputData
-the input data to be sent to `method`
+### args
+the args to be sent to `method`
 
 ### method
 the method to be executed remotely
@@ -23,6 +23,7 @@ the schema to be used to validate the input and output of `method`
 **schema format**
 ```json
 {
+  "type": "async" || "sync",
   "input": {
     "key": "val"
   },
@@ -33,7 +34,7 @@ the schema to be used to validate the input and output of `method`
 ```
 *see: http://github.com/mschema/mschema for full schema format documentation*
 
-### callback
+### callback (if type === 'async')
 
 the callback to be executed after `method` has been invoked
 
@@ -44,6 +45,7 @@ the callback to be executed after `method` has been invoked
 var rpc = require('mschema-rpc');
 
 var fireSchema = {
+  "type": "async",
   "description": "fires missle",
   "input": {
     "name": "string",
@@ -62,17 +64,17 @@ var fireSchema = {
   }
 };
 
-function fireFn (input, callback) {
+function fireFn (name, power, warheads, callback) {
   callback(null, 'weapon fired');
 }
 
-var data = {
-  "name": "small missle",
-  "power": "low",
-  "warheads": 8
-};
+var args = [
+  "small missle",
+  "low",
+  8, 
+]
 
-rpc.invoke(data, fireFn, fireSchema, function(errors, result) {
+rpc.invoke(args, fireFn, fireSchema, function(errors, result) {
   console.log('errors', errors);
   console.log('result', result);
 });

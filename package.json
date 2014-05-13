@@ -2,25 +2,32 @@
   "name": "mschema-rpc",
   "version": "0.5.1",
   "description": "Minimalistic Remote Procedural Call library using mschema validation for remote method's input and output.",
-  "keywords": ["rpc", "remote", "method", "schema", "mschema", "validator"],
+  "keywords": [
+    "rpc",
+    "remote",
+    "method",
+    "schema",
+    "mschema",
+    "validator"
+  ],
   "main": "index.js",
   "directories": {
     "example": "examples",
-    "test": "tap test/"
+    "test": "test"
   },
   "scripts": {
-    "test": "tap test"
+    "test": "tape test/*"
   },
   "repository": {
     "type": "git",
     "url": "http://github.com/mschema/mschema-rpc.git"
-   },
+  },
   "dependencies": {
     "mschema": "0.5.x"
   },
   "devDependencies": {
-    "tap": "~0.4.4"
-   },
+    "tape": "^2.12.3"
+  },
   "author": "Marak Squires <support@marak.com>",
   "license": "MIT",
   "readmeFilename": "ReadMe.md"
