@@ -35,13 +35,7 @@ test("rpc.invoke - valid data - with mschema", function (t) {
     callback(null, 'weapon fired')
   }
 
-  var args = [
-    "small missle",
-    "low",
-    8,
-  ];
-
-  rpc.invoke(args, fireFn, fireSchema, function(errors, result) {
+  rpc.invoke(fireFn, fireSchema, "small missle", "low", 8, function(errors, result) {
     
     console.log(errors);
     
@@ -77,13 +71,7 @@ test("rpc.invoke - invalid data - with mschema", function (t) {
     callback(null, 'weapon fired')
   }
 
-  var args = [
-    "small missle",
-    "unknown",
-    10, 
-  ];
-
-  rpc.invoke(args, fireFn, fireSchema, function(err, result) {
+  rpc.invoke(fireFn, fireSchema, "small missle", "unknown", 10, function(err, result) {
     t.type(result, Array);
     t.equal(result.length, 2);
     t.equal(result[0].property, "power");
@@ -117,12 +105,7 @@ test("rpc.invoke - invalid data - with mschema", function (t) {
     callback(null, 'weapon fired')
   }
 
-  var args = [
-    "hi",
-    "",
-  ];
-
-  rpc.invoke(args, fireFn, fireSchema, function(err, result) {
+  rpc.invoke(fireFn, fireSchema, "hi", "", function(err, result) {
     console.log(err, result)
     t.type(err, "object");
     t.ok(true, 'weapon not fired')

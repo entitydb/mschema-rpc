@@ -9,16 +9,16 @@ Minimalistic [Remote Procedural Call](http://en.wikipedia.org/wiki/Remote_proced
 
 # API
 
-### rpc.invoke(args, method, methodSchema, callback)
-
-### args
-the args to be sent to `method`
+### rpc.invoke(method, methodSchema, args..., callback)
 
 ### method
 the method to be executed remotely
 
 ### methodSchema
 the schema to be used to validate the input and output of `method`
+
+### args
+the args to be sent to `method`
 
 **schema format**
 ```json
@@ -34,7 +34,7 @@ the schema to be used to validate the input and output of `method`
 ```
 *see: http://github.com/mschema/mschema for full schema format documentation*
 
-### callback (if type === 'async')
+### callback
 
 the callback to be executed after `method` has been invoked
 
@@ -68,13 +68,7 @@ function fireFn (name, power, warheads, callback) {
   callback(null, 'weapon fired');
 }
 
-var args = [
-  "small missle",
-  "low",
-  8, 
-]
-
-rpc.invoke(args, fireFn, fireSchema, function(errors, result) {
+rpc.invoke(fireFn, fireSchema, "small missle", "low", 8, function(errors, result) {
   console.log('errors', errors);
   console.log('result', result);
 });

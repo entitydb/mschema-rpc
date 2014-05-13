@@ -1,9 +1,12 @@
 var rpc = {};
 var mschema = require("mschema");
 
-var invoke = rpc.invoke = function (args, method, schema, callback) {
+var invoke = rpc.invoke = function (method, schema) {
 
-  console.log(args);
+  // slice and dice method arguments
+  var args = Array.prototype.slice.call(arguments);
+  var callback = args.pop();
+  args = args.slice(2);
 
   var input;
   if (Array.isArray(args)) {
