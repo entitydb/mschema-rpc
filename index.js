@@ -1,19 +1,19 @@
 var rpc = {};
 var mschema = require("mschema");
 
-var invoke = rpc.invoke = function (method, schema) {
+var invoke = rpc.invoke = function (method) {
 
   // slice and dice method arguments
   var args = Array.prototype.slice.call(arguments);
   var callback = args.pop();
-  args = args.slice(2);
+  args = args.slice(1);
 
   var input;
   if (Array.isArray(args)) {
     // translate args array to input object
     input = {};
 
-    var inputKeys = Object.keys(schema.input);
+    var inputKeys = Object.keys(method.input);
     args.forEach(function (arg, index) {
       input[inputKeys[index]] = arg;
     });
@@ -30,7 +30,7 @@ var invoke = rpc.invoke = function (method, schema) {
   }
 
   // validate incoming input based on schema
-  var validate = mschema.validate(input, schema.input, { strict: false });
+  var validate = mschema.validate(input, method.input, { strict: false });
   if (!validate.valid) {
     return callback(new Error('Validation error: ' + JSON.stringify(validate.errors, true, 2)), validate.errors);
   }
@@ -44,7 +44,7 @@ var invoke = rpc.invoke = function (method, schema) {
 
     // if no error was detected in executing the method attempt to,
     // validate the method's output result based on schema
-    var validation = mschema.validate(result, schema.output, { strict: false });
+    var validation = mschema.validate(result, method.output, { strict: false });
     if (!validation.valid) {
       callback(validation.errors, result);
     } else {
@@ -53,7 +53,7 @@ var invoke = rpc.invoke = function (method, schema) {
   };
 
   // execute remote method
-  method.apply(this, args.concat([outCallback]));
+  method.fn.apply(this, args.concat([outCallback]));
 }
 
 module['exports'] = rpc;

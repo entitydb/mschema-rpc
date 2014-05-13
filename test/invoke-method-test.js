@@ -11,7 +11,7 @@ test("load mschema module", function (t) {
 
 test("rpc.invoke - valid data - with mschema", function (t) {
 
-  var fireSchema = {
+  var fire = {
     "type": "async",
     "description": "fires missle",
     "input": {
@@ -28,14 +28,14 @@ test("rpc.invoke - valid data - with mschema", function (t) {
     },
     "output": {
       "result": "string"
-    }
+    },
+    "fn": function fireFn (name, power, warheads, callback) {
+      callback(null, 'weapon fired')
+    },
   };
 
-  function fireFn (name, power, warheads, callback) {
-    callback(null, 'weapon fired')
-  }
 
-  rpc.invoke(fireFn, fireSchema, "small missle", "low", 8, function(errors, result) {
+  rpc.invoke(fire, "small missle", "low", 8, function(errors, result) {
     
     console.log(errors);
     
@@ -47,7 +47,7 @@ test("rpc.invoke - valid data - with mschema", function (t) {
 
 test("rpc.invoke - invalid data - with mschema", function (t) {
 
-  var fireSchema = {
+  var fire = {
     "type": "async",
     "description": "fires missle",
     "input": {
@@ -65,13 +65,12 @@ test("rpc.invoke - invalid data - with mschema", function (t) {
     "output": {
       "result": "string",
     },
+    "fn": function fireFn (name, power, warheads, callback) {
+      callback(null, 'weapon fired')
+    },
   };
 
-  function fireFn (name, power, warheads, callback) {
-    callback(null, 'weapon fired')
-  }
-
-  rpc.invoke(fireFn, fireSchema, "small missle", "unknown", 10, function(err, result) {
+  rpc.invoke(fire, "small missle", "unknown", 10, function(err, result) {
     t.type(result, Array);
     t.equal(result.length, 2);
     t.equal(result[0].property, "power");
@@ -86,7 +85,7 @@ test("rpc.invoke - invalid data - with mschema", function (t) {
 
 test("rpc.invoke - invalid data - with mschema", function (t) {
 
-  var fireSchema = {
+  var fire = {
     "type": "async",
     "description": "fires missle",
     "input": {
@@ -99,13 +98,12 @@ test("rpc.invoke - invalid data - with mschema", function (t) {
         "required": true,
       },
     },
+    "fn": function fireFn (name, power, warheads, callback) {
+      callback(null, 'weapon fired')
+    },
   };
 
-  function fireFn (name, password, callback) {
-    callback(null, 'weapon fired')
-  }
-
-  rpc.invoke(fireFn, fireSchema, "hi", "", function(err, result) {
+  rpc.invoke(fire, "hi", "", function(err, result) {
     console.log(err, result)
     t.type(err, "object");
     t.ok(true, 'weapon not fired')
